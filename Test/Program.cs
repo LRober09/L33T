@@ -23,8 +23,7 @@ namespace Test
                     thread.Abort();
                 }
             }
-
-            Console.ReadLine();
+            
         }
 
         private static void Annoying()

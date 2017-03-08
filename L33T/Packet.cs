@@ -15,12 +15,21 @@ namespace L33T
     {
         public PacketType Type { get; set; }
         public Dictionary<String, Object> Data { get; set; }
+        public string SenderID { get; set; }
 
 
         public Packet(PacketType type)
         {
             Data = new Dictionary<string, Object>();
             this.Type = type;
+            this.SenderID = "server";
+        }
+
+        public Packet(PacketType type, string senderId)
+        {
+            Data = new Dictionary<string, Object>();
+            this.Type = type;
+            this.SenderID = senderId;
         }
 
         public Packet(byte[] buffer)
@@ -34,6 +43,7 @@ namespace L33T
             //set properties
             this.Type = p.Type;
             this.Data = p.Data;
+            this.SenderID = p.SenderID;
         }
 
         public byte[] Serialize()
@@ -51,8 +61,10 @@ namespace L33T
     [Serializable]
     public enum PacketType
     {
-        ConnectionResponse,
-        ConnectionConfirm
+        Acknowledge,
+        Register,
+        Join,
+        CheckUsername
     }
 }
 

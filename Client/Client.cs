@@ -11,48 +11,65 @@ using L33T;
 
 namespace Client
 {
-    class Client
+    public class Client
     {
-        private static Socket local;
-        private static IPAddress ip;
-        private static string id;
 
-        static void Main(string[] args)
+        public string ID { get; set; }
+
+        private Socket local;
+        private IPAddress ip;
+
+
+        public void Initialize()
         {
-            local = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             ip = Util.GetLocalIpAddress();
-            Connect();
-            
+            local = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
         }
 
-        static void Connect()
+        public void Connect(IPAddress address, int port)
         {
-            IPAddress connectionIp;
-            if (Debug.CLIENT_DEBUG)
+            if (local == null) throw new ClientNotInitializedException();
+
+            IPEndPoint connectionEndPoint = new IPEndPoint(address, port);
+            local.Connect(connectionEndPoint);
+            Console.WriteLine("Contacted server! Registering...");
+            //Bookkeeping
+            
+            Packet packet = Recieve();
+            Console.WriteLine("Recieved acknowledgement packet!");
+            if (packet.Type == PacketType.Acknowledge)
             {
-                connectionIp = IPAddress.Parse("10.0.1.10");
-                Console.WriteLine("Press any key to connect to server...");
-                Console.ReadKey();
+                this.ID = packet.Data["id"].ToString();
+                Console.WriteLine("Set ID to " + ID);
+                packet = new Packet(PacketType.Register, ID);
+                packet.Data.Add("ip", ip);
+
+                Send(packet);
+                Console.WriteLine("Send IP packet");
+            }
+            else throw new UnexpectedPacketTypeException();
+
+            Console.WriteLine("Successfully connected! Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        private void Send(Packet p)
+        {
+            //Ensure that packets have a sender ID when coming from the client
+            if(p.SenderID == null)
+            {
+                p.SenderID = ID;
             }
 
-            local.Connect(connectionIp, Util.PORT);
 
+            local.Send(p.Serialize());
+        }
+
+        private Packet Recieve()
+        {
             byte[] buffer = new byte[local.ReceiveBufferSize];
             local.Receive(buffer);
-
-            Packet p = new Packet(buffer);
-
-            if(p.Type == PacketType.ConnectionResponse)
-            {
-                id = p.Data["id"].ToString();
-                Console.WriteLine(id);
-                p = new Packet(PacketType.ConnectionConfirm);
-                p.Data.Add("ip", ip);
-                local.Send(p.Serialize());
-            }
-
-            Console.WriteLine(p.Type);
-            Console.ReadLine();
+            return new Packet(buffer);
         }
     }
 }

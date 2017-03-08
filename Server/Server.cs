@@ -11,41 +11,56 @@ using System.IO;
 using L33T;
 namespace Server
 {
-    class Server
+    public class Server
     {
-        private static int port;
+        private int port;
 
-        private static Socket master;
-        private static IPAddress ip;
+        private Socket master;
+        private IPAddress ip;
 
-        private static List<Connection> connections;
+        private List<Connection> connections;
 
 
-        static void Main(string[] args)
+        public Server()
         {
-            DM("Starting server...");
 
-            connections = new List<Connection>();
-            File.Delete("log.txt");
-
-            DM("Initializing socket...");
-            master = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            ip = Util.GetLocalIpAddress();
-
-
-            port = Util.PORT;
-            IPEndPoint ipend = new IPEndPoint(ip, port);
-            DM("Binding master socket...");
-            master.Bind(ipend);
-            DM("Server successfully started on port " + port);
-
-            Listen();
         }
 
-        private static void Listen()
+        public void Start(int port)
         {
-            DM("Listening for connections at " + ip.ToString() + ":" + port + "...");
+            Initialize(port);
 
+            Log("Binding master socket to local endpoint...");
+            IPEndPoint endPoint = new IPEndPoint(ip, port);
+            master.Bind(endPoint);
+
+            Log("Starting listener thread...");
+            Thread listenThread = new Thread(Listen);
+            listenThread.Start();
+            Log("Started listening for connections on " + ip.ToString() + ":" + port + "...");
+            Log("Server started successfully!");
+
+            while (true)
+            {
+                Console.Write(">");
+                string cmd = Console.ReadLine();
+
+                //cmd manager
+            }
+        }
+
+        private void Initialize(int port)
+        {
+            Log("Initializing server...");
+            this.port = port;
+            ip = Util.GetLocalIpAddress();
+            connections = new List<Connection>();
+            master = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            File.Delete("log.txt");
+        }
+
+        private void Listen()
+        {
             while (true)
             {
                 master.Listen(0);
@@ -53,71 +68,46 @@ namespace Server
             }
         }
 
-        private static void AcceptConnection(Socket accepted)
+        private void AcceptConnection(Socket accepted)
         {
-            //Mostly bookkeeping stuff
-            Connection newConnection = new Connection(accepted);
+            Log("Accepted Connection!");
+            Connection connection = new Connection(accepted);
+            connections.Add(connection);
 
-            DM("Accepted connection! Sending response packet...");
+            Packet packet = new Packet(PacketType.Acknowledge);
 
-            newConnection.ClientThread = new Thread(() => ConnectionManager(newConnection));
-
-            DM("Assigned client to ID: " + newConnection.ID);
-
-            Packet p = new Packet(PacketType.ConnectionResponse);
-            p.Data.Add("id", newConnection.ID);
-            newConnection.Socket.Send(p.Serialize());
-
-            byte[] configBuffer = new byte[accepted.ReceiveBufferSize];
-            newConnection.Socket.Receive(configBuffer);
-
-            p = new Packet(configBuffer);
-            DM("Recieved config response from client! IP Address: " + p.Data["ip"].ToString());
-            newConnection.IP = (IPAddress)p.Data["ip"];
-            connections.Add(newConnection);
-            newConnection.ClientThread.Start();
+            
+            Send(connection.ID, packet);
+            Log("Sent acknowledgement packet!");
+            packet = Recieve(connection.ID);
+            Log("Recieved registration packet!");
+            connection.IP = (IPAddress)packet.Data["ip"];
         }
 
-        public static void ConnectionManager(Connection connection)
+        private Packet Recieve(string clientId)
         {
-            DM(connection.ID + " has successfully connected!");
+            Connection connection = connections.Find(c => c.ID == clientId);
+            byte[] buffer = new byte[connection.Socket.ReceiveBufferSize];
+            connection.Socket.Receive(buffer);
 
-            byte[] buffer;
-            while (true)
-            {
-                if (!connection.Socket.Connected)
-                {
-                    DM(connection.ID + " has disconnected!");
-                    break;
-                }
+            return new Packet(buffer);
 
-                buffer = new byte[connection.Socket.ReceiveBufferSize];
+        }
 
-                try
-                {
-                    connection.Socket.Receive(buffer);
-                }
-                catch (SocketException ex)
-                {
-                    DM(connection.ID + " has disconnected! Removing from client list...");
-                    connection.Socket.Dispose();
-                    connections.Remove(connection);
-                    DM("New client pool size: " + connections.Count);
-                    connection.ClientThread.Abort();
-                }
-            }
+        private void Send(string clientId, Packet packet)
+        {
 
         }
 
         //Logs and prints messages if in debug mode
-        private static void DM(String message)
+        private static void Log(String message)
         {
             if (Debug.DEBUG)
             {
                 StreamWriter writer = new StreamWriter("log.txt", true);
                 ConsoleColor orig = Console.ForegroundColor;
                 Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine(message);
+                Console.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] - " + message);
                 Console.ForegroundColor = orig;
 
                 writer.WriteLine("[" + DateTime.Now.ToLongTimeString() + "] - " + message);
