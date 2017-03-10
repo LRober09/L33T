@@ -10,24 +10,25 @@ using System.IO;
 
 namespace L33T
 {
+
     [Serializable]
     public class Packet
     {
         public PacketType Type { get; set; }
-        public Dictionary<String, Object> Data { get; set; }
         public string SenderID { get; set; }
 
+        private Dictionary<string, object> data = new Dictionary<string, object>();
 
         public Packet(PacketType type)
         {
-            Data = new Dictionary<string, Object>();
+            data = new Dictionary<string, Object>();
             this.Type = type;
             this.SenderID = "server";
         }
 
         public Packet(PacketType type, string senderId)
         {
-            Data = new Dictionary<string, Object>();
+            data = new Dictionary<string, Object>();
             this.Type = type;
             this.SenderID = senderId;
         }
@@ -42,8 +43,18 @@ namespace L33T
 
             //set properties
             this.Type = p.Type;
-            this.Data = p.Data;
+            this.data = p.data;
             this.SenderID = p.SenderID;
+        }
+
+        public void Add(string key, object data)
+        {
+            this.data.Add(key.ToLower(), data);
+        }
+
+        public object Get(string key)
+        {
+            return this.data[key.ToLower()];
         }
 
         public byte[] Serialize()
