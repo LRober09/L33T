@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Express 2012 for Windows Desktop
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L33TServer", "L33TServer\L33TServer.csproj", "{F1DD3178-3DF0-4114-9FA7-A825FF23AE56}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L33TPackets", "L33TPackets\L33TPackets.csproj", "{4F46EFC5-00CE-43A1-BDC9-FEABAC98E293}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L33TClient", "L33TClient\L33TClient.csproj", "{060ADADE-D4C1-4749-9168-EA0B2079569A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "L33TEngine", "L33TEngine\L33TEngine.csproj", "{349B7B8E-3E1D-4804-B499-373FDE0231F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "GameFiles", "GameFiles", "{4F0DE2B2-1BEC-4499-B47A-595274894BCD}"
+	ProjectSection(SolutionItems) = preProject
+		L33TClient\bin\Debug\upgradelist.data = L33TClient\bin\Debug\upgradelist.data
+		L33TClient\bin\Debug\wordlist.wrd = L33TClient\bin\Debug\wordlist.wrd
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 5
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://robertsondevelopment.visualstudio.com/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = L33TServer\\L33TServer.csproj
+		SccProjectName1 = L33TServer
+		SccLocalPath1 = L33TServer
+		SccProjectUniqueName2 = L33TPackets\\L33TPackets.csproj
+		SccProjectName2 = L33TPackets
+		SccLocalPath2 = L33TPackets
+		SccProjectUniqueName3 = L33TClient\\L33TClient.csproj
+		SccProjectName3 = L33TClient
+		SccLocalPath3 = L33TClient
+		SccProjectUniqueName4 = L33TEngine\\L33TEngine.csproj
+		SccProjectName4 = L33TEngine
+		SccLocalPath4 = L33TEngine
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1DD3178-3DF0-4114-9FA7-A825FF23AE56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1DD3178-3DF0-4114-9FA7-A825FF23AE56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1DD3178-3DF0-4114-9FA7-A825FF23AE56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1DD3178-3DF0-4114-9FA7-A825FF23AE56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F46EFC5-00CE-43A1-BDC9-FEABAC98E293}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F46EFC5-00CE-43A1-BDC9-FEABAC98E293}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F46EFC5-00CE-43A1-BDC9-FEABAC98E293}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F46EFC5-00CE-43A1-BDC9-FEABAC98E293}.Release|Any CPU.Build.0 = Release|Any CPU
+		{060ADADE-D4C1-4749-9168-EA0B2079569A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{060ADADE-D4C1-4749-9168-EA0B2079569A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{060ADADE-D4C1-4749-9168-EA0B2079569A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{060ADADE-D4C1-4749-9168-EA0B2079569A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{349B7B8E-3E1D-4804-B499-373FDE0231F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{349B7B8E-3E1D-4804-B499-373FDE0231F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{349B7B8E-3E1D-4804-B499-373FDE0231F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{349B7B8E-3E1D-4804-B499-373FDE0231F8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
